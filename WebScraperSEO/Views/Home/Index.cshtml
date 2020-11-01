@@ -20,18 +20,15 @@
 
 <div class="row">
     <h5>Ranking:</h5>
-    @if (Model.NumberOfResults.Any())
+    @if (@Model.NumberOfResults.Count() == 0)
     {
-        @if (Model.NumberOfResults.Count == 0)
+        <p> No ranking</p>
+    }
+    else
+    {
+        @foreach (var result in Model.NumberOfResults)
         {
-            <p> No ranking</p>
-        }
-        else
-        {
-            @foreach (var result in Model.NumberOfResults)
-            {
-                <p>@result</p>
-            }
+            <p>@result</p>
         }
     }
 </div>
