@@ -1,0 +1,34 @@
+﻿@model Search
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<form method="post" class="formSpace">
+    <div class="row col-md-2 inputSpace">
+        <label asp-for="SearchKeyword">Search</label>
+        <input type="text" name="keyword" size="60" placeholder="Search keyword" />
+    </div>
+    <div class="row col-md-2 inputSpace">
+        <label asp-for="SearchUrl">Url</label>
+        <input type="text" name="url" size="60" placeholder="Url address" />
+    </div>
+    <div class="row col-md-2 inputSpace">
+        <input type="submit" value="Search" class="submit" />
+    </div>
+</form>
+
+<div class="row">
+    <h5>Ranking:</h5>
+    @if (Model.NumberOfResults.Count == 0)
+    {
+        <p> No ranking</p>
+    }
+    else
+    {
+        @foreach (var result in Model.NumberOfResults)
+        {
+            <p>@result</p>
+        }
+    }
+</div>
