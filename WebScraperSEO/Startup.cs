@@ -29,6 +29,7 @@ namespace WebScraperSEO
             services.AddHttpClient();
             services.AddScoped<IWebScraper, WebScraper>();
             services.AddScoped<ISearchRepository, SearchRepository>();
+            services.AddScoped<IParseContent, ParseContent>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

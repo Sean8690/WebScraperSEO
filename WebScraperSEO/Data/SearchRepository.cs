@@ -12,18 +12,20 @@ namespace WebScraperSEO.Data
     public class SearchRepository : ISearchRepository
     {
         private readonly IWebScraper _webScraper;
+        private readonly IParseContent _parseContent;
 
-        public SearchRepository(IWebScraper webScraper)
+        public SearchRepository(IWebScraper webScraper, IParseContent parseContent)
         {
             _webScraper = webScraper;
+            _parseContent = parseContent;
         }
 
         public async Task<Search> GetSearchResultsAsync(string searchKeyword, string searchUrl)
         {
             SearchEngineSettings settings = new SearchEngineSettings();
             int pageNums = 0;
-            IEnumerable<object> results = new List<object>();
-            
+            IList<string> parseHtml = new List<string>();
+
             while (pageNums < settings.GoogleTopResults)
             {
                 UrlHelper buildUrl = new UrlHelper();
@@ -33,14 +35,12 @@ namespace WebScraperSEO.Data
                 string htmlContent = await _webScraper.DownloadPageAsync(url);
 
                 //Parse html content
-                var pattern = @"<title.*?>(.*?)<\\/title>";
-                var resultRegex = new Regex((pattern, RegexOptions.IgnoreCase).ToString());
-                results = resultRegex.Matches(htmlContent).ToList();
+                parseHtml = await _parseContent.ParseHtmlPage(htmlContent);
 
                 pageNums = pageNums + 10;
             }
 
-            var occurences = results.Select((x, y) => new { y, x })
+            var occurences = parseHtml.Select((x, y) => new { x, y })
                 .Where(x => x.ToString().Contains(searchKeyword))
                 .Select(x => x.y).ToList();
 
